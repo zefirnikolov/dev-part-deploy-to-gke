@@ -7,9 +7,9 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   IMAGE_NAME: reactjsapp
   IMAGE_TAG: latest
-  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
-  GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  # GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  # GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  # GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   DEPLOYMENT_FILE: app.yaml
   DEPLOYMENT_REPO: zefirnikolov/ops-part-deploy-to-gke
 
