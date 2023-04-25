@@ -7,9 +7,9 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   IMAGE_NAME: reactjsapp
   IMAGE_TAG: latest
-  # GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
-  # GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  # GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   DEPLOYMENT_FILE: app.yaml
   DEPLOYMENT_REPO: zefirnikolov/ops-part-deploy-to-gke
 
@@ -72,3 +72,18 @@ jobs:
           git add ${{ env.DEPLOYMENT_FILE }}
           git commit -m "Update image tag"
           git push
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.GKE_PROJECT }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Authenticate to Google Cloud SDK
+        run: gcloud auth login --brief --cred-file="${{ env.GOOGLE_APPLICATION_CREDENTIALS }}"
+
+      - name: Get Kubernetes credentials
+        run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_ZONE }} --project=${{ env.GKE_PROJECT }}
+
+      - name: Deploy to Kubernetes cluster
+        run: kubectl apply -f deployment-repo/${{ env.DEPLOYMENT_FILE }}
