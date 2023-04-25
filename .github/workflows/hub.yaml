@@ -86,6 +86,10 @@ jobs:
       - name: Authenticate to Google Cloud SDK
         run: gcloud auth login --brief --cred-file="${{ env.GOOGLE_APPLICATION_CREDENTIALS }}"
 
+      - name: Install kubectl and gke-gcloud-auth-plugin
+        run: |
+          gcloud components install kubectl gke-gcloud-auth-plugin
+
       - name: Get Kubernetes credentials
         run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone=${{ env.GKE_ZONE }} --project=${{ env.GKE_PROJECT }}
 
