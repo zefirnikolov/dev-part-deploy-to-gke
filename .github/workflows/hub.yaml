@@ -57,6 +57,7 @@ jobs:
         with:
           repository: ${{ env.DEPLOYMENT_REPO }}
           path: deployment-repo
+          token: ${{ secrets.DEP }}
 
       - name: Update deployment file
         run: |
@@ -66,8 +67,8 @@ jobs:
       - name: Commit and push changes to deployment repository
         run: |
           cd deployment-repo
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "bot@bot.com"
           git add ${{ env.DEPLOYMENT_FILE }}
           git commit -m "Update image tag"
           git push
