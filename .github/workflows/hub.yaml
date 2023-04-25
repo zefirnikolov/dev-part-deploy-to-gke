@@ -77,7 +77,11 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ env.GKE_PROJECT }}
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Authenticate to Google Cloud SDK
+        uses: google-github-actions/auth@v0.8.3
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
 
       - name: Authenticate to Google Cloud SDK
         run: gcloud auth login --brief --cred-file="${{ env.GOOGLE_APPLICATION_CREDENTIALS }}"
