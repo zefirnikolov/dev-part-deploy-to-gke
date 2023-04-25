@@ -19,17 +19,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies and Build the app
+        run: |
+          npm ci
+          npm run build
 
       # - name: Run tests
       #   run: npm run test
 
-      - name: Build React app
-        run: npm run build
-
       - name: Set image tag based on timestamp
-        run: echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
