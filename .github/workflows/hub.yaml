@@ -5,7 +5,13 @@ on: [pull_request]
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  IMAGE_NAME: reactjsapp
   IMAGE_TAG: latest
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  DEPLOYMENT_FILE: app.yaml
+  DEPLOYMENT_REPO: zefirnikolov/ops-part-deploy-to-gke
 
 jobs:
   build-and-push:
@@ -44,4 +50,24 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/reactjsapp:${{ env.IMAGE_TAG }}
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: Check out deployment repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.DEPLOYMENT_REPO }}
+          path: deployment-repo
+
+      - name: Update deployment file
+        run: |
+          cd deployment-repo
+          sed -i "s|image:.*|image: ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|" ${{ env.DEPLOYMENT_FILE }}
+
+      - name: Commit and push changes to deployment repository
+        run: |
+          cd deployment-repo
+          git config user.name "GitHub Actions Bot"
+          git config user.email "bot@bot.com"
+          git add ${{ env.DEPLOYMENT_FILE }}
+          git commit -m "Update image tag"
+          git push

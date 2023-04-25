@@ -11,9 +11,8 @@ env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
-  KUBECONFIG: ${{ github.workspace }}/kubeconfig.yaml
-  DEPLOYMENT_FILE: deployment.yaml
-  DEPLOYMENT_REPO: my-org/my-deployment-repo
+  DEPLOYMENT_FILE: app.yaml
+  DEPLOYMENT_REPO: 
   IMAGE_TAG: latest
 
 jobs:
@@ -37,7 +36,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_USERNAME }}/my-image:${{ env.IMAGE_TAG }}
 
       - name: Check out deployment repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: ${{ env.DEPLOYMENT_REPO }}
           path: deployment-repo
